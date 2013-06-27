@@ -15,11 +15,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
     <link rel="stylesheet" href="css/reveal.min.css">
-    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+    <link rel="stylesheet" href="css/theme/night.css" id="theme">
 
     <!-- For syntax highlighting -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
-
+    <style>
+      .reveal pre code {
+        font-size: 21px;
+        margin-top: 30px;
+        padding: 20px;
+      }
+    </style>
     <!-- If the query includes 'print-pdf', use the PDF print sheet -->
     <script>
       document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
@@ -74,17 +80,17 @@
 
         <section>
           <h2>Aumentando tipos: ejemplo 1</h2>
-          <pre><code data-trim style="font-size: 18px; margin-top: 20px;">
+          <pre><code data-trim>
 if (!String.prototype.trim) {
   String.prototype.trim = function() {
     return this.replace(/^\s+/, '').replace(/\s+$/, '');
-  }
+  };
 }
           </code></pre>
         </section>
         <section>
           <h2>Aumentando tipos: ejemplo 2</h2>
-          <pre><code data-trim style="font-size: 18px; margin-top: 20px;">
+          <pre><code data-trim>
 if (!Function.prototype.bind) {
   Function.prototype.bind = function(scope) {
     var self = this, args = [].slice.call(arguments, 1);
@@ -92,13 +98,13 @@ if (!Function.prototype.bind) {
     return function() {
       return self.apply(scope, args.concat(arguments));
     };
-  }
+  };
 }
           </code></pre>
         </section>
         <section>
           <h2>Aumentando tipos: ejemplo 3</h2>
-          <pre><code data-trim style="font-size: 18px; margin-top: 20px;">
+          <pre><code data-trim>
 if (!Number.prototype.add) {
   Number.prototype.add = function(num) {
     return this + num;
@@ -107,6 +113,18 @@ if (!Number.prototype.add) {
 
 console.assert((2).add(3) === 5, 'Por el culo te la inco');
           </code></pre>
+        </section>
+
+        <section>
+          <h2>Aumentando tipos</h2>
+          <p>Tabla de compatibilidad ECMAScript 5</p>
+          <iframe src="http://kangax.github.io/es5-compat-table/" frameborder="0" width="1024" height="550" style="background-color: #fff"></iframe>
+          <a href="http://kangax.github.io/es5-compat-table/">http://kangax.github.io/es5-compat-table/</a>
+        </section>
+
+        <section>
+          <h2>Scope</h2>
+
         </section>
 
         <section>
