@@ -43,33 +43,93 @@
       <!-- Any section element inside of this container is displayed as a slide -->
       <div class="slides">
         <section>
-          <h1>JavaScript 4 the masses</h1>
+          <h1>JavaScript</h1>
+          <h1>for the masses</h1>
           <p>
             <small>Creado por <a href="http://orioltorras.cat">Oriol Torras</a> / <a href="http://twitter.com/uriusfurius">@uriusfurius</a></small>
           </p>
         </section>
 
         <section>
-          <h2>Tipos de datos</h2>
-          <p>Copia, paso por argumento y comparación</p>
-          <div style="overflow: hidden;margin: 0 auto;width:450px">
-            <ul style="float:left">
-              <li>number</li>
-              <li>boolean</li>
-              <li>string</li>
-              <li>object</li>
-            </ul>
-            <ul style="float: left;list-style-type:none;">
-              <li>por valor</li>
-              <li>por valor</li>
-              <li>por valor</li>
-              <li>por referencia</li>
-            </ul>
-          </div>
+          <h2>Constructores</h2>
+          <p>Funciones diseñadas para ser usadas con el operador <b>new</b>. Inicializan un objeto recién creado, añadiendo propiedades a <b>this</b>.</p>
+          <pre class="fragment"><code data-trim style="width:935px">
+function Rectangle(w, h) {
+  this.width = w;
+  this.height = h;
+}
+
+var rect1 = new Rectangle(2, 4); // rect1 = { width: 2, height: 4 };
+var rect2 = new Rectangle(8.5, 11); // rect2 = { width: 8.5, height: 11 };
+          </code></pre>
         </section>
 
         <section>
-          <h2>Aumentando tipos</h2>
+          <h2>Prototipos y herencia</h2>
+          <pre><code data-trim>
+function Rectangle(w, h) {
+  this.width = w;
+  this.height = h;
+  this.area = function() { return this.width * this.height; };
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Prototipos y herencia</h2>
+          <ul>
+            <li>El prototipo de un objeto es el valor de la propiedad <i>prototype</i> de su constructor</li>
+            <li>Todas las funciones tienen una propiedad <i>prototype</i></li>
+            <li>El objeto <i>prototype</i> se inicializa con la propiedad <i>constructor</i></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Prototipos y herencia</h2>
+          <pre><code data-trim>
+function Rectangle(w, h) {
+  this.width = w;
+  this.height = h;
+}
+
+Rectangle.prototype.area = function() {
+  return this.width * this.height;
+};
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Prototipos y herencia</h2>
+          <p>Puede ser util usar herencia basada en prototipos sin constructores</p>
+          <pre class="fragment"><code data-trim>
+function extend(proto) {
+  function F() {}
+  F.prototype = proto;
+  return new F();
+}
+          </code></pre>
+          <p class="fragment">Evita tener que crear una función constructora con nombre. Funcionalidad añadida en ES5 <i>Object.create()</i></p>
+        </section>
+
+        <section>
+          <h2>Prototipos y herencia</h2>
+          <p>Para distinguir las propiedades propias del objeto de las de su prototipo usaremos el método <i>Object.hasOwnProperty()</i></p>
+          <pre><code data-trim>
+var r = new Rectangle(2, 3);
+r.hasOwnProperty('width'); // true
+r.hasOwnProperty('area'); // false
+'area' in r; // true
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>Lectura y escritura de propiedades heredadas</h3>
+          <p>En caso de no existir la propiedad directamente en el objeto se lee del prototipo</p>
+          <p>La escritura siempre se hace sobre el objeto nunca en el prototipo</p>
+        </section>
+
+        <section>
+          <h2>Extendiendo tipos</h2>
           <ul>
             <li class="fragment">Añadiendo métodos</li>
             <li class="fragment">Bad practice</li>
@@ -79,7 +139,7 @@
         </section>
 
         <section>
-          <h2>Aumentando tipos: ejemplo 1</h2>
+          <h2>Extendiendo tipos (i)</h2>
           <pre><code data-trim>
 if (!String.prototype.trim) {
   String.prototype.trim = function() {
@@ -89,7 +149,7 @@ if (!String.prototype.trim) {
           </code></pre>
         </section>
         <section>
-          <h2>Aumentando tipos: ejemplo 2</h2>
+          <h2>Extendiendo tipos (ii)</h2>
           <pre><code data-trim>
 if (!Function.prototype.bind) {
   Function.prototype.bind = function(scope) {
@@ -103,7 +163,7 @@ if (!Function.prototype.bind) {
           </code></pre>
         </section>
         <section>
-          <h2>Aumentando tipos: ejemplo 3</h2>
+          <h2>Extendiendo tipos (iii)</h2>
           <pre><code data-trim>
 if (!Number.prototype.add) {
   Number.prototype.add = function(num) {
@@ -111,27 +171,36 @@ if (!Number.prototype.add) {
   };
 }
 
-console.assert((2).add(3) === 5, 'Por el culo te la inco');
+(2).add(3) // 5
+
+2..add(3) // 5
           </code></pre>
         </section>
 
         <section>
-          <h2>Aumentando tipos</h2>
+          <h2>Extendiendo tipos</h2>
           <p>Tabla de compatibilidad ECMAScript 5</p>
           <iframe src="http://kangax.github.io/es5-compat-table/" frameborder="0" width="1024" height="550" style="background-color: #fff"></iframe>
           <a href="http://kangax.github.io/es5-compat-table/">http://kangax.github.io/es5-compat-table/</a>
         </section>
 
         <section>
-          <h2>Scope</h2>
+          <h2>Extendiendo tipos</h2>
+          <p>Librerías que proporcionan <b>cross browser</b> polyfills para los nuevos métodos de ECMAScript 5</p>
+          <ul style="list-style-type: none">
+            <li><a href="https://github.com/kriskowal/es5-shim/">es5-shim</a></li>
+            <li><a href="https://github.com/douglascrockford/JSON-js/blob/master/json2.js">json2.js</a></li>
+            <li><a href="http://augmentjs.com/">augment.js</a></li>
+        </section>
 
+        <section>
+          <h2>ECMAscript 6</h2>
         </section>
 
         <section>
           <h1>THE END</h1>
           <h3>BY Oriol Torras / orioltorras.cat</h3>
         </section>
-
       </div>
 
     </div>
