@@ -44,10 +44,14 @@
       <div class="slides">
         <section>
           <h1>JavaScript</h1>
-          <h1>for the masses</h1>
+          <h1>o k ase?</h1>
           <p>
             <small>Creado por <a href="http://orioltorras.cat">Oriol Torras</a> / <a href="http://twitter.com/uriusfurius">@uriusfurius</a></small>
           </p>
+        </section>
+
+        <section>
+          <img src="images/llama.jpg" />
         </section>
 
         <section>
@@ -200,8 +204,173 @@ if (!Number.prototype.add) {
         </section>
 
         <section>
-          <h1>THE END</h1>
-          <h3>BY Oriol Torras / orioltorras.cat</h3>
+          <h2>Simulando clases</h2>
+          <pre><code data-trim>
+function Circle(radius) {
+  // propiedad de instancia
+  this.r = radius;
+}
+
+// propiedad de clase estática
+Circle.PI = 3.14159;
+
+// método de instancia
+Circle.prototype.area = function() {
+  return Circle.PI * this.r * this.r;
+};
+
+// método de clase estático
+Circle.Max = function(a, b) {
+  if (a.r > b.r) return a;
+  else return b;
+};
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Simulando clases</h2>
+          <p>Si queremos hacer que un miembro de la clase sea privado podemos usar closures</p>
+          <pre><code data-trim>
+function ImmutableRectangle(w, h) {
+  this.getWidth = function() {
+    return w;
+  };
+  this.getHeight = function() {
+    return h;
+  };
+}
+
+ImmutableRectangle.prototype.area = function() {
+  return this.getWidth() * this.getHeight();
+};
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Superclases y subclases</h2>
+          <ul>
+            <li>La clase Object es la más generica de todas</li>
+            <li>Todas las demás clases heredan de Object</li>
+            <li>Se crea una cadena de prototipos</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Subclases</h2>
+          <pre><code data-trim>
+function PositionedRectangle(w, h, x, y) {
+  Rectangle.call(this, w, h);
+
+  this.x = x;
+  this.y = y;
+}
+
+PositionedRectangle.prototype = extend(Rectangle.prototype);
+
+PositionedRectangle.prototype.contains = function(x, y) {
+  return (x &gt; this.x &amp;&amp;
+          x &lt; this.x + this.width &amp;&amp;
+          y &gt; this.y &amp;&amp;
+          y &lt; this.y + this.height);
+};
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Subclases</h2>
+          <pre><code data-trim>
+function PositionedRectangle(w, h, x, y) {
+  Rectangle.call(this, w, h);
+
+  this.x = x;
+  this.y = y;
+}
+
+PositionedRectangle.prototype = extend(Rectangle.prototype);
+
+PositionedRectangle.prototype.constructor = PositionedRectangle;
+
+PositionedRectangle.prototype.contains = function(x, y) {
+  return (x &gt; this.x &amp;&amp;
+          x &lt; this.x + this.width &amp;&amp;
+          y &gt; this.y &amp;&amp;
+          y &lt; this.y + this.height);
+};
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Subclases</h2>
+          <pre><code data-trim>
+var r = new PositionedRectangle(2, 2, 2, 2);
+
+r instanceof PositionedRectangle; // true
+r instanceof Rectangle; // true
+r instanceof Object; // true
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Invocar métodos sobrecargados</h2>
+          <pre><code data-trim>
+Rectangle.prototype.toString = function() {
+  return '[' + this.width + ', ' + this.height + ']';
+};
+
+PositionedRectangle.prototype.toString = function() {
+  return '(' + this.x + ', ' + this.y + ') ' +
+         Rectangle.prototype.toString.call(this);
+};
+         </code></pre>
+        </section>
+
+        <section>
+          <h2>Mixins</h2>
+          <ul>
+            <li>Hacer subclases no es la única manera de extender una clase</li>
+            <li>Se pueden copiar los métodos de una clase a otra</li>
+          </ul>
+
+          <pre class="fragment"><code data-trim>
+function mixin(from, to) {
+  var protoFrom = from.prototype;
+  var protoTo = to.prototype;
+
+  for (var name in protoFrom) {
+    if (typeof protoFrom[name] !== 'function') continue;
+    protoTo[name] = protoFrom[name];
+  }
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Mixins</h2>
+          <pre><code data-trim>
+function Colored(c) {
+  this.color = c;
+}
+
+Colored.prototype.getColor = function() {
+  return this.color;
+};
+
+function ColoredRectangle(h, w, c) {
+  Rectangle.call(this, w, h);
+  Colored.call(this, c);
+}
+
+ColoredRectangle.prototype = extend(Rectangle.prototype);
+ColoredRectangle.prototype.constructor = ColoredRectangle;
+
+mixin(Colored, ColoredRectangle);
+          </code></pre>
+        </section>
+
+        <section>
+          <h1>Gracias</h1>
+          <p>CSS slideshow - <a href="http://lab.hakim.se/reveal-js/#/">reveal.js</a></p>
+          <p>Oriol Torras / orioltorras.com</p>
         </section>
       </div>
 
